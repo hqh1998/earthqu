@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1,user-scalable=no"/>
+    <title>CSVLayer sample</title>
+    <link rel="stylesheet" href="https://js.arcgis.com/3.23/esri/css/esri.css">
+    <style>
+      html, body{
+        height: 100%;
+        width: 100%;
+        margin: 0;
+        padding: 0;
+      }
+        #map{
+        height: 90%;
+        width: 100%;
+        margin: 0;
+        padding:0;}
+        
+   /*   body {
+        background-color: #FFF;
+        overflow: hidden;
+        font-family: "Trebuchet MS";
+      }*/
+    </style>
+       <script src="https://js.arcgis.com/3.23/"></script>
+    <script>
+      var map, csv;
+      require([
+        "esri/map", 
+        "esri/layers/CSVLayer",
+        "esri/Color",
+        "esri/symbols/SimpleMarkerSymbol",
+        "esri/symbols/SimpleLineSymbol",
+        "esri/renderers/SimpleRenderer",
+		"esri/renderers/ClassBreaksRenderer",
+        "esri/renderers/HeatmapRenderer",
+        "esri/InfoTemplate",
+        "esri/config",
+        "dojo/domReady!"
+      ], function(
+        Map, CSVLayer, Color, SimpleMarkerSymbol,SimpleLineSymbol, SimpleRenderer, ClassBreaksRenderer,HeatmapRenderer,InfoTemplate, esriConfig
+      ) {
+        
+        // Use CORS
+        esriConfig.defaults.io.corsEnabledServers.push("hqh1998.github.io"); // supports CORS
+
+        // Use proxy if the server doesn't support CORS
+        // esriConfig.defaults.io.proxyUrl = "/proxy/";  
+        
+        map = new Map("map", {
+          basemap: "gray",
+          center: [ -60, -10 ],
+          zoom: 4 
+        });
+        csv = new CSVLayer("https://hqh1998.github.io/earthqu/a.csv", {
+          copyright: "USGS.gov"
+        });
+          
+             var symbol = new SimpleMarkerSymbol();
+             var sls = new SimpleLineSymbol(SimpleLineSymbol.STYLE_NULL,new Color([238,69,0]),1);
+             symbol.style = SimpleMarkerSymbol.STYLE_CIRCLE;
+             symbol.setSize("15");
+             symbol.setColor(new Color([255,127,80, 0.5]));
+             symbol.outline=sls;
+             var renderer = new SimpleRenderer(symbol);
+             csv.setRenderer(renderer);
+            var template = new InfoTemplate("${type}","${*}");
+           csv.setInfoTemplate(template);
+           map.addLayer(csv); 
+  
+       });   
+    </script>
+  </head>
+  <body>  
+    <input type="button" onclick="location.href='2.html'" value="热力图" />
+    <div id="map"></div>
+   
+      
+  </body>
+</html>
+
